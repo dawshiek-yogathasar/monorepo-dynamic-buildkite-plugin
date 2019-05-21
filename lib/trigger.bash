@@ -6,6 +6,7 @@ function generate_pipeline_yml() {
   validate_trigger=$(read_pipeline_config "$pipeline_index" "TRIGGER")
   # Checking if Trigger type is defined to proceed
   if [[ -n $validate_trigger ]]; then
+    echo >&2 "Valid Trigger Setup: ${validate_trigger}"
     for pipeline_index in "${upload_pipeline_jobs[@]}";
     do
         trigger "$pipeline_index"
