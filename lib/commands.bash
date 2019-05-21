@@ -5,6 +5,7 @@ function generate_command_pipeline_yml() {
   for pipeline_index in "${upload_pipeline_jobs[@]}";
   do
     validate_pipeline=$(read_pipeline_commands_config "$pipeline_index" "LABEL")
+    echo >&2 "Validate pipeline output : ${validate_pipeline}"
     if [[ -n $validate_pipeline ]]; then
       add_command "$pipeline_index"
     fi
