@@ -33,13 +33,13 @@ function add_label_block() {
   default_label="Upload Pipeline"
 
   if [[ -n $label ]]; then
-      pipeline_yml+=("$(set_Padding 2)$(set_Padding 0)label: ${label:-$default_label}")
+      pipeline_yml+=("$(set_padding 2)$(set_padding 0)label: ${label:-$default_label}")
   fi
 }
 
 # Add Command Array Block
 function add_command_array_block() {
-    pipeline_yml+=("$(set_Padding 4)commands:")
+    pipeline_yml+=("$(set_padding 4)commands:")
 }
 
 # Adds single commands
@@ -47,7 +47,7 @@ function add_command_in_block() {
   local command=$1
 
   if [[ -n $command ]]; then
-      pipeline_yml+=("$(set_Padding 6)- ${command}")
+      pipeline_yml+=("$(set_padding 6)- ${command}")
   fi
 }
 

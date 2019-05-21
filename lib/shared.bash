@@ -88,14 +88,13 @@ function read_pipeline_commands() {
 }
 
 # Padding Function for Yaml
-function set_Padding() {
+function set_padding() {
     local padding=$1
 
     #0 is used for dash + space for block seperation in Buildkite yaml
     if [[ $padding == 0 ]]; then
         echo "- "
     else
-        echo $padding
         seq  -f " " -s '' $padding
     fi
 }
