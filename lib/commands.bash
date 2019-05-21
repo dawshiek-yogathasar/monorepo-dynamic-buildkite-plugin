@@ -2,6 +2,7 @@
 set -ueo pipefail
 
 function generate_command_pipeline_yml() {
+  local validate_pipeline
   for pipeline_index in "${upload_pipeline_jobs[@]}";
   do
     validate_pipeline=$(read_pipeline_commands_config "$pipeline_index" "LABEL")

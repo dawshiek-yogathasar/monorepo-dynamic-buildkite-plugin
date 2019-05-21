@@ -2,7 +2,7 @@
 set -ueo pipefail
 
 function generate_pipeline_yml() {
-
+  local validate_trigger
   validate_trigger=$(read_pipeline_config "$pipeline_index" "TRIGGER")
   # Checking if Trigger type is defined to proceed
   if [[ -n $validate_trigger ]]; then
