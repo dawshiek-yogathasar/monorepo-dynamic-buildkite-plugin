@@ -22,10 +22,23 @@ index_of_pipeline_changes "$diff_Changes"
 if [ "${#upload_pipeline_jobs[@]}" -eq 0 ]; then
   echo "No changes detected"
 else
-  validate_trigger=$(read_pipeline_config "$pipeline" "TRIGGER")
-  validate_pipeline=$(read_pipeline_config "$pipeline" "PIPELINE")
-
-  if [[ -n $validate_trigger ] || [ -n $validate_pipeline]]; then
+    for pipeline_index in "${upload_pipeline_jobs[@]}";
+    do
+      validate_trigger=$(read_pipeline_config "$pipeline" "TRIGGER")
+      validate_pipeline=$(read_pipeline_config "$pipeline_index" "PIPELINE")
+      if [ -n $validate_trigger ] || [ -n $validate_pipeline]; then
+        #Output Details in Debug Mode
+        if [[ -n ${DEBUG:-} ]] ; then
+            echo >&2 "Trigger Data: $validate_trigger"
+            echo >&2 "Pipeline Data: $validate_pipeline"
+        fi
+        break
+      else
+        echo "Invalid config. No Trigger or Pipeline not defined in path config"
+        exit 1
+      fi
+    done
+  
     pipeline_yml+=("steps:")
     generate_pipeline_yml
     output=$(printf '%s\n' "${pipeline_yml[@]}")
@@ -34,6 +47,4 @@ else
         echo >&2 "$output"
     fi
     echo "$output" | buildkite-agent pipeline upload
-  else
-    echo "No Trigger or Pipeline not defined in path config"
 fi

@@ -3,12 +3,12 @@ set -ueo pipefail
 
 function generate_command_pipeline_yml() {
   for pipeline_index in "${upload_pipeline_jobs[@]}";
-    do
-      validate_pipeline=$(read_pipeline_config "$pipeline" "PIPELINE")
-      if [[ -n $validate_pipeline ]]; then
-        add_command "$pipeline_index"
-      fi
-    done
+  do
+    validate_pipeline=$(read_pipeline_config "$pipeline_index" "PIPELINE")
+    if [[ -n $validate_pipeline ]]; then
+      add_command "$pipeline_index"
+    fi
+  done
 }
 # Function to orchestrate adding a command block in Pipeline
 function add_command() {
