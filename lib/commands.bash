@@ -32,14 +32,13 @@ function add_label_block() {
   local label=$1
   default_label="Upload Pipeline"
 
-  if [[ -n $trigger ]]; then
+  if [[ -n $label ]]; then
       pipeline_yml+=("$(set_Padding 2)$(set_Padding 0)label: ${label:-$default_label}")
   fi
 }
 
 # Add Command Array Block
 function add_command_array_block() {
-    local label=$1
     pipeline_yml+=("$(set_Padding 4)commands:")
 }
 
