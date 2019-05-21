@@ -24,9 +24,9 @@ if [ "${#upload_pipeline_jobs[@]}" -eq 0 ]; then
 else
     for pipeline_index in "${upload_pipeline_jobs[@]}";
     do
-      validate_trigger=$(read_pipeline_config "$pipeline" "TRIGGER")
+      validate_trigger=$(read_pipeline_config "$pipeline_index" "TRIGGER")
       validate_pipeline=$(read_pipeline_config "$pipeline_index" "PIPELINE")
-      if [ -n $validate_trigger ] || [ -n $validate_pipeline]; then
+      if [[ -n $validate_trigger ]] || [[ -n $validate_pipeline ]]; then
         #Output Details in Debug Mode
         if [[ -n ${DEBUG:-} ]] ; then
             echo >&2 "Trigger Data: $validate_trigger"
