@@ -26,7 +26,7 @@ else
     do
       echo >&2 "Pipeline Index: $pipeline_index"
       validate_trigger=$(read_pipeline_config "$pipeline_index" "TRIGGER")
-      validate_pipeline=$(read_pipeline_config "$pipeline_index" "PIPELINE")
+      validate_pipeline=$(read_pipeline_commands_config "$pipeline_index" "LABEL")
       echo >&2 "Trigger Data: $validate_trigger"
       echo >&2 "Pipeline Data: $validate_pipeline"
       if [[ -n $validate_trigger ]] || [[ -n $validate_pipeline ]]; then

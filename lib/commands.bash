@@ -4,7 +4,7 @@ set -ueo pipefail
 function generate_command_pipeline_yml() {
   for pipeline_index in "${upload_pipeline_jobs[@]}";
   do
-    validate_pipeline=$(read_pipeline_config "$pipeline_index" "PIPELINE")
+    validate_pipeline=$(read_pipeline_commands_config "$pipeline_index" "LABEL")
     if [[ -n $validate_pipeline ]]; then
       add_command "$pipeline_index"
     fi
@@ -13,11 +13,11 @@ function generate_command_pipeline_yml() {
 # Function to orchestrate adding a command block in Pipeline
 function add_command() {
     local pipeline=$1
-    local pipeline_location
-    pipeline_location=$(read_pipeline_config "$pipeline" "PIPELINE")
-    echo >&2 "Generating pipeline upload for pipeline: ${pipeline_location}"
+    local pipeline_label
+    pipeline_label=$(read_pipeline_commands_config "$pipeline" "LABEL")
+    echo >&2 "Generating pipeline upload for pipeline: ${pipeline_label}"
     add_label "$(read_pipeline_commands_config "$pipeline" "LABEL")"
-    add_commands_to_block "${pipeline_location}"
+    add_commands_to_block "${pipeline}"
 }
 
 # Sets label as stop level for each command block
