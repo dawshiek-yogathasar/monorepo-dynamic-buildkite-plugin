@@ -1,0 +1,39 @@
+#!/bin/bash
+set -eo pipefail
+
+# Set Base Working Directory 
+basedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+. "$basedir/lib/diff.bash"
+. "$basedir/lib/lighthouse.bash"
+. "$basedir/lib/shared.bash"
+. "$basedir/lib/commands.bash"
+. "$basedir/lib/trigger.bash"
+
+#Global used across files
+upload_pipeline_jobs=();
+pipeline_yml=();
+
+# Run Diff
+diff_Changes=$(run_diff)
+index_of_pipeline_changes "$diff_Changes"
+
+
+if [ "${#upload_pipeline_jobs[@]}" -eq 0 ]; then
+  echo "No changes detected"
+else
+  validate_trigger=$(read_pipeline_config "$pipeline" "TRIGGER")
+  validate_pipeline=$(read_pipeline_config "$pipeline" "PIPELINE")
+
+  if [[ -n $validate_trigger ] || [ -n $validate_pipeline]]; then
+    pipeline_yml+=("steps:")
+    generate_pipeline_yml
+    output=$(printf '%s\n' "${pipeline_yml[@]}")
+
+    if [[ -n ${DEBUG:-} ]] ; then
+        echo >&2 "$output"
+    fi
+    echo "$output" | buildkite-agent pipeline upload
+  else
+    echo "No Trigger or Pipeline not defined in path config"
+fi

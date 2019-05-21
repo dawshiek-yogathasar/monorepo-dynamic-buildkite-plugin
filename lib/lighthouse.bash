@@ -1,0 +1,27 @@
+#!/bin/bash
+set -euo pipefail
+
+function has_changed() {
+  local diff_output=$1
+  local watched_path=$2
+  for path in $watched_path; do
+    if echo "$diff_output" | grep -q "^$path" ; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+function index_of_pipeline_changes() {
+  local diff_output=$1
+
+  watch_index=0
+  while IFS=$'\n' read -r watched_path ; do
+    echo >&2 "Comparing watch path: ${watched_path}"
+    if has_changed "$diff_output" "$watched_path" ; then
+      echo >&2 "Detected changes in watched path: $watched_path"
+      upload_pipeline_jobs+=("$watch_index")
+    fi
+    watch_index=$((watch_index+1))
+  done <<< "$(plugin_read_list WATCH PATH)"
+}
