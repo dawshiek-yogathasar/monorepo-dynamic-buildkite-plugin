@@ -54,15 +54,14 @@ function add_command_in_block() {
 # Handler for Commands to File 
 function add_commands_to_block() {
   local pipeline=$1
-  local commands_to_add
-  commands=$(read_pipeline_commands "$pipeline")
+  list_of_commands=$(read_pipeline_commands "$pipeline")
 
-  if [[ -n "$commands" ]]; then
+  if [[ -n "$list_of_commands" ]]; then
     add_command_array_block
 
     while IFS=$'\n' read -r commands_to_add ; do
-        add_command_in_block "$command"
-    done <<< "$commands"
+        add_command_in_block "$commands_to_add"
+    done <<< "$list_of_commands"
   fi
 }
 
