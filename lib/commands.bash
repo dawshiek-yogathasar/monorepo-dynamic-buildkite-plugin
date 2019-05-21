@@ -8,6 +8,7 @@ function generate_command_pipeline_yml() {
     if [[ -n $validate_pipeline ]]; then
       add_command "$pipeline_index"
     fi
+    echo >&2 "Pipeline config has no label : ${pipeline_index}"
   done
 }
 # Function to orchestrate adding a command block in Pipeline
@@ -15,8 +16,8 @@ function add_command() {
     local pipeline=$1
     local pipeline_label
     pipeline_label=$(read_pipeline_commands_config "$pipeline" "LABEL")
-    echo >&2 "Generating pipeline upload for pipeline: ${pipeline_label}"
-    add_label "$(read_pipeline_commands_config "$pipeline" "LABEL")"
+    echo >&2 "Generating pipeline upload for pipeline using commands: ${pipeline_label}"
+    add_label_block "$(read_pipeline_commands_config "$pipeline" "LABEL")"
     add_commands_to_block "${pipeline}"
 }
 
