@@ -2,23 +2,25 @@
 set -ueo pipefail
 
 function generate_pipeline_yml() {
-  for pipeline_index in "${upload_pipeline_jobs[@]}";
-  do
-    validate_trigger=$(read_pipeline_config "$pipeline_index" "TRIGGER")
-      # Checking if Trigger type is defined to proceed
-    if [[ -n $validate_trigger ]]; then
-      trigger "$pipeline_index"
-    fi
-  done
-  add_wait
-  add_hooks
+  local validate_trigger
+  validate_trigger=$(read_pipeline_config "$pipeline_index" "TRIGGER")
+  # Checking if Trigger type is defined to proceed
+  if [[ -n $validate_trigger ]]; then
+    echo >&2 "Valid Trigger Setup: ${validate_trigger}"
+    for pipeline_index in "${upload_pipeline_jobs[@]}";
+    do
+        trigger "$pipeline_index"
+    done
+    add_wait
+    add_hooks
+  fi
 }
 
 function trigger() {
   local pipeline=$1
   local trigger
   trigger=$(read_pipeline_config "$pipeline" "TRIGGER")
-  echo >&2 "Generating pipeline upload for pipeline: ${trigger}"
+  echo >&2 "Generating pipeline upload for pipeline using triggers: ${trigger}"
   add_trigger "${trigger}"
   add_label "$(read_pipeline_config "$pipeline" "LABEL")"
   add_async "$(read_pipeline_config "$pipeline" "ASYNC")"
@@ -121,11 +123,12 @@ function add_build_env() {
 
 function add_wait() {
   local wait
-  wait=${BUILDKITE_PLUGIN_MONOREPO_DYNAMIC_WAIT:-true}
+  wait=${BUILDKITE_PLUGIN_MONOREPO_DYNAMIC_WAIT:-false}
 
   if [[ "$wait" = true ]] ; then
     pipeline_yml+=("  - wait")
   fi
+  echo >&2 "Added wait condition"
 }
 
 function add_command() {
@@ -138,6 +141,7 @@ function add_command() {
 }
 
 function add_hooks() {
+  echo >&2 "Adding hooks"
   while IFS=$'\n' read -r command ; do
     add_command "$command"
   done <<< "$(plugin_read_list HOOKS COMMAND)"
