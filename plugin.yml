@@ -5,6 +5,8 @@ requirements:
   - git
 configuration:
   properties:
+    debug:
+      type: boolean
     diff:
       type: string
     watch:
