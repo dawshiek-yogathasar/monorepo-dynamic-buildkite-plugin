@@ -7,14 +7,18 @@ function generate_command_pipeline_yml() {
   do
     validate_pipeline=$(read_pipeline_commands_config "$pipeline_index" "LABEL")
     echo >&2 "Validate pipeline output : ${validate_pipeline}"
-    if [[ -n $validate_pipeline ]]; then
-      add_command "$pipeline_index"
-    fi
+
+    if [[ -n $validate_pipeline ]];
+      then
+        echo >&2 "Calling add_command : ${validate_pipeline}"
+        add_command "$pipeline_index"
+      fi
     echo >&2 "Pipeline config has no label : ${pipeline_index}"
   done
 }
 # Function to orchestrate adding a command block in Pipeline
 function add_command() {
+    echo >&2 "add_command running: ${1}"
     local pipeline=$1
     local pipeline_label
     pipeline_label=$(read_pipeline_commands_config "$pipeline" "LABEL")

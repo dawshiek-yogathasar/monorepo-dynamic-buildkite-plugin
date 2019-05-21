@@ -128,6 +128,7 @@ function add_wait() {
   if [[ "$wait" = true ]] ; then
     pipeline_yml+=("  - wait")
   fi
+  echo >&2 "Added wait condition"
 }
 
 function add_command() {
@@ -140,6 +141,7 @@ function add_command() {
 }
 
 function add_hooks() {
+  echo >&2 "Adding hooks"
   while IFS=$'\n' read -r command ; do
     add_command "$command"
   done <<< "$(plugin_read_list HOOKS COMMAND)"
