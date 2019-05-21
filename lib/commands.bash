@@ -11,13 +11,13 @@ function generate_command_pipeline_yml() {
     if [[ -n $validate_pipeline ]];
       then
         echo >&2 "Calling add_command : ${validate_pipeline}"
-        add_command "$pipeline_index"
+        add_command_pipeline "$pipeline_index"
       fi
     echo >&2 "Pipeline config has no label : ${pipeline_index}"
   done
 }
 # Function to orchestrate adding a command block in Pipeline
-function add_command() {
+function add_command_pipeline() {
     echo >&2 "add_command running: ${1}"
     local pipeline=$1
     local pipeline_label
@@ -32,14 +32,13 @@ function add_label_block() {
   local label=$1
   default_label="Upload Pipeline"
 
-  if [[ -n $trigger ]]; then
+  if [[ -n $label ]]; then
       pipeline_yml+=("$(set_Padding 2)$(set_Padding 0)label: ${label:-$default_label}")
   fi
 }
 
 # Add Command Array Block
 function add_command_array_block() {
-    local label=$1
     pipeline_yml+=("$(set_Padding 4)commands:")
 }
 
@@ -55,15 +54,14 @@ function add_command_in_block() {
 # Handler for Commands to File 
 function add_commands_to_block() {
   local pipeline=$1
-  local commands_to_add
-  commands=$(read_pipeline_commands "$pipeline")
+  list_of_commands=$(read_pipeline_commands "$pipeline")
 
-  if [[ -n "$commands" ]]; then
+  if [[ -n "$list_of_commands" ]]; then
     add_command_array_block
 
     while IFS=$'\n' read -r commands_to_add ; do
-        add_command_in_block "$command"
-    done <<< "$commands"
+        add_command_in_block "$commands_to_add"
+    done <<< "$list_of_commands"
   fi
 }
 
