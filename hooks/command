@@ -40,6 +40,7 @@ else
   
     pipeline_yml+=("steps:")
     generate_pipeline_yml
+    generate_command_pipeline_yml
     output=$(printf '%s\n' "${pipeline_yml[@]}")
 
     if [[ -n ${DEBUG:-} ]] ; then
